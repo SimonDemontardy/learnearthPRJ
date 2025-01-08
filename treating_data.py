@@ -11,7 +11,7 @@ from sklearn.metrics import accuracy_score, confusion_matrix, roc_auc_score
 import matplotlib.pyplot as plt
 
 # Load the data
-earth = pd.read_csv('Earth/database.csv').head(10)
+earth = pd.read_csv('Earth/database.csv').head(100)
 print(earth.head())
 
 # dropt the unnecessary columns :
@@ -21,10 +21,6 @@ print(earth.head())
 #earth.dropna(inplace=True)
 
 def get_population(lat, lon, radius=100):
-    """
-    Function to estimate the population within a given radius around specific coordinates.
-    Uses Overpass API.
-    """
     overpass_url = "http://overpass-api.de/api/interpreter"
     query = f"""
     [out:json];
@@ -33,15 +29,25 @@ def get_population(lat, lon, radius=100):
     );
     out body;
     """
-    response = requests.get(overpass_url, params={'data': query})
-    if response.status_code == 200:
-        data = response.json()
-        print(f"Response data for lat: {lat}, lon: {lon} -> {data}")  # Debugging line
-        return sum(int(elm.get("tags", {}).get("population", 0)) for elm in data["elements"])
-    else:
-        print(f"Failed to get data for lat: {lat}, lon: {lon}, status code: {response.status_code}")  # Debugging line
+    try:
+        response = requests.get(overpass_url, params={'data': query}, timeout=60)
+        if response.status_code == 200:
+            data = response.json()
+            #print(f"Response data for lat: {lat}, lon: {lon} -> {data}")  # Debugging line
+            population_sum = 0
+            for elm in data["elements"]:
+                population_str = elm.get("tags", {}).get("population", "0")
+                try:
+                    population = int(population_str.replace(' habitantes', '').replace('.', '').strip())
+                    population_sum += population
+                except ValueError:
+                    print(f"Invalid population value: {population_str}")
+            return population_sum
+        else:
+            print(f"Failed to get data for lat: {lat}, lon: {lon}, status code: {response.status_code}")
+    except requests.exceptions.RequestException as e:
+        print(f"Request failed for lat: {lat}, lon: {lon}, error: {e}")
     return 0
-
 
 # Ajouter une colonne pour la population impactée
 earth['population_impacted'] = earth.apply(lambda x: get_population(x['Latitude'], x['Longitude']), axis=1)
@@ -54,5 +60,7 @@ geo_data = gpd.GeoDataFrame(earth, geometry=geometry)
 
 # Afficher un aperçu
 print(geo_data.head())
+
+geo_data.to_csv('Earth/processed_data.csv', index=False)
 
 
