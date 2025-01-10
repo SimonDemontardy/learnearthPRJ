@@ -20,3 +20,6 @@ if __name__ == "__main__":
     plt.ylabel('Depth')
     plt.title('Clusters des séismes')
     plt.show()
+
+
+

@@ -11,7 +11,7 @@ from sklearn.metrics import accuracy_score, confusion_matrix, roc_auc_score
 import matplotlib.pyplot as plt
 
 # Load the data
-earth = pd.read_csv('Earth/database.csv').head(100)
+earth = pd.read_csv('database.csv').head(1000)
 print(earth.head())
 
 # dropt the unnecessary columns :
@@ -61,6 +61,6 @@ geo_data = gpd.GeoDataFrame(earth, geometry=geometry)
 # Afficher un aperçu
 print(geo_data.head())
 
-geo_data.to_csv('Earth/processed_data.csv', index=False)
+geo_data.to_csv('processed_data1000.csv', index=False)
 
 
