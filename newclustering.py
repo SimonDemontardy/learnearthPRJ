@@ -6,7 +6,7 @@ from sklearn.decomposition import PCA
 import numpy as np
 
 # ====== 1. Chargement des données ======
-data = pd.read_csv('cleaned_processed_data1000.csv')
+data = pd.read_csv('processed_data_all_cleaned.csv')
 data['Magnitude_log'] = np.log1p(data['Magnitude'])
 data['Depth_log'] = np.log1p(data['Depth'])
 data['population_impacted_log'] = np.log1p(data['population_impacted'])
@@ -99,8 +99,8 @@ plt.show()
 # ====== 7. Résultats finaux ======
 print("\nDataset final avec dangerosité attribuée :")
 print(data)
-data.to_csv('clustering_results.txt', sep='\t', index=False)
-print("\nLes résultats ont été sauvegardés dans 'clustering_results.txt'.")
+data.to_csv('clustering_results_all.txt', sep='\t', index=False)
+print("\nLes résultats ont été sauvegardés dans 'clustering_results_all.txt'.")
 
 
 #data['dangerosite_adjusted'] = data.apply(adjust_dangerosity, axis=1)
@@ -159,7 +159,7 @@ final_columns = ['Date', 'Time', 'Magnitude', 'Depth', 'population_impacted', 'd
 final_dataset = data[final_columns]
 
 # Export du dataset final vers un fichier CSV
-output_file_path = 'final_clustering_results.csv'  # Nom du fichier
+output_file_path = 'final_clustering_results_all.csv'  # Nom du fichier
 final_dataset.to_csv(output_file_path, sep='\t', index=False)
 
 print(f"Les résultats finaux ont été sauvegardés dans : {output_file_path}")
