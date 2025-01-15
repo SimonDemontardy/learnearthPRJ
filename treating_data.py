@@ -1,14 +1,8 @@
 import pandas as pd
-import numpy as np
 import geopandas as gpd
 from shapely.geometry import Point
 import requests
-from sklearn.preprocessing import StandardScaler
-from sklearn.cluster import KMeans
-from sklearn.model_selection import train_test_split
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.metrics import accuracy_score, confusion_matrix, roc_auc_score
-import matplotlib.pyplot as plt
+
 
 # Load the data
 earth = pd.read_csv('database.csv').head(1000)
@@ -20,6 +14,8 @@ earth.drop(['ID', 'Source', 'Location Source', 'Magnitude Source', 'Status'], ax
 print(earth.head())
 #earth.dropna(inplace=True)
 
+# cette fonction permet de récupérer les données de population grâce à l'API overpass. 
+# la population correspond à une coordonnées donnée + le rayon de 100 km autour
 def get_population(lat, lon, radius=100):
     overpass_url = "http://overpass-api.de/api/interpreter"
     query = f"""
@@ -54,13 +50,14 @@ earth['population_impacted'] = earth.apply(lambda x: get_population(x['Latitude'
 
 print(earth.head())
 
-# Créer une géométrie pour les données
+# Créer une géométrie pour les données (BONUS) afin de créer une manière de visualiser
 geometry = [Point(xy) for xy in zip(earth['Longitude'], earth['Latitude'])]
 geo_data = gpd.GeoDataFrame(earth, geometry=geometry)
 
 # Afficher un aperçu
 print(geo_data.head())
 
+# enregistrement des resultats dans un nouveau csv
 geo_data.to_csv('processed_data1000.csv', index=False)
 
 
