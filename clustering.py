@@ -8,8 +8,9 @@ from sklearn.decomposition import PCA
 import numpy as np
 import seaborn as sns
 
+
 ######### loading data #########
-data = pd.read_csv('processed_data_all_cleaned.csv')
+data = pd.read_csv('datasets/processed_data_all_cleaned.csv')
 
 ######### modifiying values #########
 # test with logs
@@ -103,6 +104,8 @@ plt.title('DBSCAN Clustering')
 plt.xlabel('PCA1')
 plt.ylabel('PCA2')
 
+# Sauvegarder le graphique
+plt.savefig('clustering_results/PCAclustering.png')
 plt.show()
 
 ######### Résultats finaux #########
@@ -133,6 +136,7 @@ axes[2].set_title('Population impactée par Cluster')
 axes[2].set_ylabel('Population Impactée')
 
 plt.tight_layout()
+plt.savefig('clustering_results/boxplots_by_cluster.png')
 plt.show()
 
 
@@ -172,7 +176,7 @@ final_columns = ['Date', 'Time', 'Magnitude', 'Depth', 'population_impacted', 'd
 final_dataset = data[final_columns]
 
 # Export du dataset final vers un fichier CSV
-output_file_path = 'final_clustering_results_all.csv'  # file name for the OUTPUT
+output_file_path = 'datasets/final_clustering_results_all.csv'  # file name for the OUTPUT
 final_dataset.to_csv(output_file_path, sep='\t', index=False)
 
 print(f"Les résultats finaux ont été sauvegardés dans : {output_file_path}")

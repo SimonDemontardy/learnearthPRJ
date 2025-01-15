@@ -1,5 +1,5 @@
 import pandas as pd
-
+#this python file allow to clean the original dataset to supress all the unused colomns
 # Charger le CSV
 file_path = 'processed_data1000.csv' 
 columns_to_keep = ['Date','Time', 'Magnitude', 'Depth', 'Longitude', 'Latitude','population_impacted']
